@@ -16,4 +16,21 @@ router.get('/', function (request, response, next) {
 
 });
 
+router.post('/', function (request, response, next) {
+    let tarefa = {
+        id: null,
+        titulo: request.body.titulo,
+        descricao: request.body.descricao,
+        data_criacao: new Date(),
+        concluida: false,
+    }
+
+    Tarefa.create(tarefa)
+        .then((tarefa) => {
+            response.status(201).json(tarefa);
+        }).catch(ex => {
+            next(ex);
+        });
+});
+
 module.exports = router;

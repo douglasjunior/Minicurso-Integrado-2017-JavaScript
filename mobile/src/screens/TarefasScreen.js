@@ -11,11 +11,13 @@ import {
 import axios from 'axios';
 
 import TarefaList from '../components/TarefaList';
+import TarefaForm from '../components/TarefaForm';
 
 export default class TarefasScreen extends Component {
 
     state = {
         tarefas: [],
+        showForm: false,
     };
 
     componentDidMount() {
@@ -34,13 +36,39 @@ export default class TarefasScreen extends Component {
             })
     }
 
+    closeForm = () => {
+        this.setState({ showForm: false, })
+    }
+
+    openForm = () => {
+        this.setState({ showForm: true, })
+    }
+
+    saveTarefa = (tarefa) => {
+        axios.post('/tarefas/', tarefa)
+            .then((response) => {
+                if (response.status === 201) {
+                    const { tarefas } = this.state;
+                    tarefas.unshift(response.data);
+                    this.setState({ showForm: false, tarefas });
+                }
+            }).catch((ex) => {
+                console.warn(ex);
+            })
+    }
+
     render() {
-        const { tarefas, } = this.state;
+        const { tarefas, showForm } = this.state;
 
         return (
             <View style={styles.container}>
 
                 <TarefaList tarefas={tarefas} />
+
+                <Button title='Nova Tarefa' onPress={this.openForm} />
+
+                <TarefaForm visible={showForm} onRequestClose={this.closeForm}
+                    onSave={this.saveTarefa} />
 
             </View>
         );
