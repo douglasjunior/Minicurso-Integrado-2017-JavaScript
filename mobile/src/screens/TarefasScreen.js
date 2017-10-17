@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import axios from 'axios';
+import _ from 'lodash';
 
 import TarefaList from '../components/TarefaList';
 import TarefaForm from '../components/TarefaForm';
@@ -57,13 +58,40 @@ export default class TarefasScreen extends Component {
             })
     }
 
+    onExcluirPress = (tarefaId) => {
+        Alert.alert('Excluir', `Deseja excluir a tarefa ${tarefaId}?`, [
+            {
+                text: 'Cancelar',
+                onPress: () => null,
+                style: 'cancel'
+            },
+            {
+                text: 'Excluir',
+                style: 'destructive',
+                onPress: () => {
+                    axios.delete('/tarefas/' + tarefaId)
+                        .then((response) => {
+                            if (response.status === 204) {
+                                const { tarefas } = this.state;
+                                _.remove(tarefas, { id: tarefaId });
+                                this.setState({ tarefas });
+                            }
+                        }).catch((ex) => {
+                            console.warn(ex);
+                        })
+                }
+            },
+        ], { cancelable: true })
+    }
+
     render() {
         const { tarefas, showForm } = this.state;
 
         return (
             <View style={styles.container}>
 
-                <TarefaList tarefas={tarefas} />
+                <TarefaList tarefas={tarefas}
+                    onExcluirPress={this.onExcluirPress} />
 
                 <Button title='Nova Tarefa' onPress={this.openForm} />
 

@@ -10,8 +10,9 @@ export default class TarefaList extends Component {
 
     renderItem = (record) => {
         const { item, index } = record;
+        const { onExcluirPress } = this.props;
         return (
-            <TarefaItem {...item} />
+            <TarefaItem {...item} onExcluirPress={onExcluirPress} />
         );
     }
 

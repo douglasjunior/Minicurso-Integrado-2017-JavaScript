@@ -10,26 +10,28 @@ import moment from 'moment';
 export default class TarefaItem extends Component {
 
     render() {
-        const { id, titulo, data_criacao, concluida, } = this.props;
+        const { id, titulo, data_criacao, concluida, onExcluirPress } = this.props;
         return (
-            <View style={styles.container}>
+            <TouchableOpacity onLongPress={() => onExcluirPress(id)}>
+                <View style={styles.container}>
 
-                <View style={styles.header}>
-                    <Text style={styles.label}># {id}</Text>
-                    <Text style={[styles.label, { flex: 1, textAlign: 'right' }]}>{moment(data_criacao).format('DD/MM/YYYY HH:mm')}</Text>
+                    <View style={styles.header}>
+                        <Text style={styles.label}># {id}</Text>
+                        <Text style={[styles.label, { flex: 1, textAlign: 'right' }]}>{moment(data_criacao).format('DD/MM/YYYY HH:mm')}</Text>
+                    </View>
+
+                    <View style={styles.body}>
+                        <Text style={styles.titulo}>{titulo}</Text>
+                    </View>
+
+                    <View style={styles.footer}>
+                        <Text style={styles.label}>{concluida ? 'Concluída' : 'Pendente'}</Text>
+
+                        <Switch value={concluida} onValueChange={(value) => null} />
+                    </View>
+
                 </View>
-
-                <View style={styles.body}>
-                    <Text style={styles.titulo}>{titulo}</Text>
-                </View>
-
-                <View style={styles.footer}>
-                    <Text style={styles.label}>{concluida ? 'Concluída' : 'Pendente'}</Text>
-
-                    <Switch value={concluida} onValueChange={(value) => null} />
-                </View>
-
-            </View>
+            </TouchableOpacity>
         )
     }
 }

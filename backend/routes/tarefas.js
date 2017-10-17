@@ -33,4 +33,22 @@ router.post('/', function (request, response, next) {
         });
 });
 
+router.delete('/:tarefa_id', function (request, response, next) {
+    let tarefaId = request.params.tarefa_id;
+
+    Tarefa.destroy({
+        where: {
+            id: tarefaId
+        }
+    }).then((linhasAfetadas) => {
+        if (linhasAfetadas > 0) {
+            response.status(204).send();
+        } else {
+            response.status(404).send();
+        }
+    }).catch(ex => {
+        next(ex);
+    });
+});
+
 module.exports = router;
