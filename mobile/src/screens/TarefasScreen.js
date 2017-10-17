@@ -84,6 +84,29 @@ export default class TarefasScreen extends Component {
         ], { cancelable: true })
     }
 
+    onConcluidaChange = (tarefaId, concluida) => {
+        let method;
+        if (concluida) {
+            method = axios.put;
+        } else {
+            method = axios.delete;
+        }
+        method('/tarefas/' + tarefaId + "/concluida")
+            .then((response) => {
+                if (response.status === 204) {
+                    const { tarefas } = this.state;
+                    const novasTarefas = tarefas.map((tarefa) => {
+                        if (tarefa.id === tarefaId)
+                            tarefa.concluida = concluida
+                        return tarefa;
+                    })
+                    this.setState({ tarefas: novasTarefas });
+                }
+            }).catch((ex) => {
+                console.warn(ex);
+            })
+    }
+
     render() {
         const { tarefas, showForm } = this.state;
 
@@ -91,7 +114,8 @@ export default class TarefasScreen extends Component {
             <View style={styles.container}>
 
                 <TarefaList tarefas={tarefas}
-                    onExcluirPress={this.onExcluirPress} />
+                    onExcluirPress={this.onExcluirPress}
+                    onConcluidaChange={this.onConcluidaChange} />
 
                 <Button title='Nova Tarefa' onPress={this.openForm} />
 

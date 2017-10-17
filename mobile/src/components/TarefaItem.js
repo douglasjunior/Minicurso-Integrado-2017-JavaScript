@@ -10,7 +10,7 @@ import moment from 'moment';
 export default class TarefaItem extends Component {
 
     render() {
-        const { id, titulo, data_criacao, concluida, onExcluirPress } = this.props;
+        const { id, titulo, data_criacao, concluida, onExcluirPress, onConcluidaChange } = this.props;
         return (
             <TouchableOpacity onLongPress={() => onExcluirPress(id)}>
                 <View style={styles.container}>
@@ -27,7 +27,7 @@ export default class TarefaItem extends Component {
                     <View style={styles.footer}>
                         <Text style={styles.label}>{concluida ? 'Concluída' : 'Pendente'}</Text>
 
-                        <Switch value={concluida} onValueChange={(value) => null} />
+                        <Switch value={concluida} onValueChange={(value) => onConcluidaChange(id, value)} />
                     </View>
 
                 </View>

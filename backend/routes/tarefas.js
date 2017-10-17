@@ -51,4 +51,36 @@ router.delete('/:tarefa_id', function (request, response, next) {
     });
 });
 
+router.put('/:tarefa_id/concluida', function (request, response, next) {
+    let tarefaId = request.params.tarefa_id;
+
+    concluirTarefa(tarefaId, true, response, next);
+});
+
+router.delete('/:tarefa_id/concluida', function (request, response, next) {
+    let tarefaId = request.params.tarefa_id;
+
+    concluirTarefa(tarefaId, false, response, next);
+});
+
+function concluirTarefa(tarefaId, concluida, response, next) {
+    let tarefa = {
+        concluida: concluida
+    };
+
+    Tarefa.update(tarefa, {
+        where: {
+            id: tarefaId
+        }
+    }).then((linhasAfetadas) => {
+        if (linhasAfetadas[0] > 0) {
+            response.status(204).send();
+        } else {
+            response.status(404).send();
+        }
+    }).catch(ex => {
+        next(ex);
+    });
+}
+
 module.exports = router;
